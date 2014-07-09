@@ -124,6 +124,35 @@ function decodeList(str, ndx) {
   return deferred.promise;
 }
 
+function decodeDict(str, ndx) {
+  var deferred = Q.defer();
+  //assert(str[ndx] == 'd')
+  ndx++; //d
+  var dict = {};
+  async.whilst(
+    function() {
+      return str[ndx] !== 'e';
+    },
+    function(cb) {
+      decodeElement(str, ndx)
+      .then(function(keyRes) {
+        decodeElement(str, keyRes.ndx)
+        .then(function(valRes) {
+          ndx = valRes.ndx;
+          dict[keyRes.obj] = valRes.obj;
+          cb(null);
+        });
+      });
+    },
+    function(err) {
+      if(err) deferred.fail(err);
+      else deferred.resolve({ndx: ndx + 1, obj: dict});
+    }
+  );
+
+  return deferred.promise;
+}
+
 // Return format: {ndx: newNdx, obj: objDecoded}
 function decodeElement(str, ndx) {
   if(str[ndx] === 'i') {
