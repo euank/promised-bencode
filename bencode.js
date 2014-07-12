@@ -102,6 +102,7 @@ function decodeList(str, ndx) {
   var list = [];
   async.whilst(
     function() {
+      if(ndx >= str.length) return deferred.fail("Unexpected end of input");
       return str[ndx] !== 'e';
     },
     function(cb) {
@@ -131,6 +132,7 @@ function decodeDict(str, ndx) {
   var dict = {};
   async.whilst(
     function() {
+      if(ndx >= str.length) return deferred.fail("Unexpected end of input");
       return str[ndx] !== 'e';
     },
     function(cb) {
