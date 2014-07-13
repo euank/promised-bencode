@@ -33,7 +33,23 @@ var errorTests = [
   {
     name: "doesn't decode invalid dict",
     in: "d"
-  }
+  },
+  {
+    name: "doesn't decode an incorrectly lengthed string",
+    in:"5:five"
+  },
+  {
+    name: "Doesn't decode invalid int",
+    in: "i1wronge"
+  },
+  {
+    name: "Doesn't decode endless int",
+    in: "i1"
+  },
+  {
+    name: "Doesn't decode invalid list",
+    in: "l"
+  },
 ];
 
 describe("benocode", function() {

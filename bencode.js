@@ -71,6 +71,9 @@ function decodeInt(str, ndx) {
   ndx++;
   var num = 0;
   for(; str[ndx] !== 'e'; ndx++) {
+    if(str[ndx] < '0' || str[ndx] > '9') {
+      return deferred.fail("Invalid string decoding at character " + ndx + "; expected int and got " + str[ndx]);
+    }
     num *= 10;
     num += parseInt(str[ndx], 10);
   }
@@ -84,12 +87,18 @@ function decodeStr(str, ndx) {
   var out = '';
   var strlen = 0;
   for(; str[ndx] !== ':'; ndx++) {
+    if(str[ndx] < '0' || str[ndx] > '9') {
+      return deferred.fail("Invalid string decoding at character " + ndx + "; expected int and got " + str[ndx]);
+    }
     strlen *= 10;
     strlen += parseInt(str[ndx], 10);
   }
   ndx++; //bypass :
   for(var i = 0; i < strlen; i++, ndx++) {
     out += str[ndx];
+  }
+  if(ndx >= str.length) {
+    return deferred.fail("Unexpectedly reached end of input");
   }
   deferred.resolve({ndx: ndx, obj: out});
   return deferred.promise;
